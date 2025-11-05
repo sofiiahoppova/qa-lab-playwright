@@ -25,16 +25,16 @@ test.describe("Фінальний набір тестів для AcademyBugs.com
     // Крок 2: Знаходимо посилання на товар "DNK Yellow Shoes" і клікаємо на нього
     await page.getByRole("link", { name: "DNK Yellow Shoes" }).click();
 
-    // Крок 3: Знайходимо зображення товару (перше <img> на сторінці)
-    const image = page.locator("img.wp-post-image");
+    // Крок 3: Знайходимо зображення товару
+    const image = page.locator(".ec_details_main_image img");
     // Перевіряємо, що зображення дійсно існує і відображається
     await expect(image).toBeVisible();
     // Клікаємо на зображення, щоб відкрити повнорозмірну картинку
     await image.click();
 
     // Крок 4: Перевіряємо, що зʼявилось модальне вікно
-    // На сайті воно зʼявляється з CSS-класом .pp_overlay або .pp_pic_holder
-    const modalImage = page.locator(".pp_pic_holder img");
+    // На сайті воно зʼявляється з CSS-класом ec_details_large_popup_main
+    const modalImage = page.locator(".ec_details_large_popup_main img");
     // Перевіряємо, що повнорозмірна картинка видима
     await expect(modalImage).toBeVisible();
 
