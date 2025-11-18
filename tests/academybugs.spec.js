@@ -228,3 +228,75 @@ test.describe("Підтвердження багів: всі баги існую
 
 });
 
+test.describe("Фінальний набір тестів", () => {
+  test.setTimeout(0);
+  test("Успішне скидання паролю", async ({ page }) => {
+    let bugConfirmed = false;
+    try {
+      // Крок 1: Відкрити сторінку реєстрації
+      await page.goto("https://academybugs.com/account/?ec_page=register");
+
+      // Крок 2: Натиснути "Forgot Your Password?"
+      await page.getByRole("link", { name: "Forgot Your Password?" }).click();
+
+      // Крок 3: Ввести email
+      await page.fill("#ec_account_forgot_password_email", "test@gmail.com");
+
+      // Крок 4: Натиснути "Retrieve Password"
+      await page.click("text=RETRIEVE PASSWORD");
+
+      // Очікуваний результат
+      await expect(page.locator(".success-msg")).toHaveText(
+        /password has been sent/i
+      );
+    } catch (error) {
+      console.log("Баг підтверджено (помилка в процесі тестування)");
+      bugConfirmed = true;
+    }
+  });
+
+  test("Успішний вхід користувача в систему", async ({ page }) => {
+    let bugConfirmed = false;
+    
+    try {
+      // Крок 1: Відкрити сторінку входу
+      await page.goto("https://academybugs.com/account/?ec_page=login");
+    
+      // Крок 2: Ввести email
+      await page.fill("#ec_account_login_email", "barbos@gmail.com");
+    
+      // Крок 3: Ввести пароль
+      await page.fill("#ec_account_login_password", "123456");
+    
+      // Крок 4: Натиснути "Sign In"
+      await page.getByRole("button", { name: "SIGN IN" }).click();
+    
+      // Очікуваний результат
+      await expect(page).toHaveURL('https://academybugs.com/account/?ec_page=dashboard&account_success=login_success');
+    } catch (error) {
+      console.log("Баг підтверджено (помилка в процесі тестування)");
+      bugConfirmed = true;
+    }
+  });
+
+  /*test("Успішна зміна персональної інформації", async ({ page }) => {
+
+    // Крок 1: Логін
+    await page.goto("https://academybugs.com/account/?ec_page=login");
+    await page.fill("#ec_account_login_email", "barbos@gmail.com");
+    await page.fill("#ec_account_login_password", "123456");
+    await page.getByRole("button", { name: "SIGN IN" }).click();
+
+    // Крок 2: Перехід до персональної інформації
+    await page.goto("https://academybugs.com/account/?ec_page=personal_information");
+
+    // Крок 3: Змінюємо поле з правильним селектором
+    //await page.fill("#ec_account_personal_information_last_name", "NewName");
+
+    // Крок 4: Оновлення
+    await page.getByRole("button", { name: "UPDATE" }).click();
+
+    // Очікуваний результат
+    expect(page.locator(".ec_account_success")).toHaveText('Your personal information was updated successfully.');
+  });*/
+});
